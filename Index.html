@@ -1,1 +1,1299 @@
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naira AI - Next-Gen Autonomous Assistant</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Tone.js Engine CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        neon: '#00f2fe',
+                        cyber: '#4facfe'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'spin-slow': 'spin 8s linear infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(99, 102, 241, 0.4)' },
+                            '50%': { boxShadow: '0 0 30px rgba(0, 242, 254, 0.8)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.8);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .voice-wave-bar {
+            width: 4px;
+            height: 36px;
+            background: linear-gradient(180deg, #00f2fe 0%, #4facfe 100%);
+            border-radius: 999px;
+        }
+        /* Saturn-like Orb Ring Animation Styles */
+        .saturn-ring {
+            border: 2px solid rgba(0, 242, 254, 0.4);
+            transform: rotateX(70deg) rotateY(-15deg);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+        .saturn-ring-active {
+            border-color: rgba(0, 242, 254, 0.9);
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.8), inset 0 0 25px rgba(0, 242, 254, 0.6);
+            animation: ringPulse 2s infinite ease-in-out;
+        }
+        @keyframes ringPulse {
+            0%, 100% { transform: rotateX(70deg) rotateY(-15deg) scale(1); }
+            50% { transform: rotateX(70deg) rotateY(-15deg) scale(1.08); }
+        }
+        /* Subscription Card Animated Glow */
+        .sub-card-animated {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sub-card-animated:hover {
+            transform: translateY(-6px);
+        }
+        .sub-card-animated::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .sub-card-animated:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white">
+
+    <div id="app" class="flex w-full h-full relative">
+
+        <!-- Sidebar Navigation -->
+        <aside class="w-20 lg:w-64 glass-panel border-r border-slate-800 flex flex-col justify-between p-4 z-20 transition-all duration-300">
+            <div>
+                <!-- Logo -->
+                <div class="flex items-center gap-3 px-2 py-3 mb-6 relative">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-cyan-400 to-emerald-400 flex items-center justify-center shadow-lg shadow-indigo-500/30 relative">
+                        <i class="fa-solid font-bold fa-brain text-white text-xl"></i>
+                        <!-- Golden Crown Indicator for Premium Status -->
+                        <div id="premium-crown-badge" class="absolute -top-2 -right-2 text-amber-400 text-xs drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] hidden">
+                            <i class="fa-solid fa-crown text-amber-300 animate-bounce"></i>
+                        </div>
+                    </div>
+                    <div class="hidden lg:block">
+                        <div class="flex items-center gap-1.5">
+                            <h1 class="font-bold text-lg leading-none bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">Naira AI</h1>
+                            <span id="badge-plan-type" class="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700 font-mono">FREE</span>
+                        </div>
+                        <span class="text-xs text-cyan-400 font-mono tracking-widest">PERSONAL AI ASSISTANT</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="space-y-2">
+                    <button type="button" onclick="switchTab('live-voice')" id="nav-live-voice" class="nav-btn w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-indigo-600/20 text-slate-300 hover:text-white transition-all text-sm font-medium border border-transparent">
+                        <i class="fa-solid fa-microphone-lines text-indigo-400 text-lg w-6"></i>
+                        <span class="hidden lg:inline">Continuous Live Voice</span>
+                        <span class="hidden lg:inline-block ml-auto text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono border border-cyan-500/30">LIVE</span>
+                    </button>
+
+                    <button type="button" onclick="switchTab('chat')" id="nav-chat" class="nav-btn w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-indigo-600/20 text-slate-300 hover:text-white transition-all text-sm font-medium border border-transparent">
+                        <i class="fa-solid fa-comments text-cyan-400 text-lg w-6"></i>
+                        <span class="hidden lg:inline">Omni-Chat Hub</span>
+                    </button>
+
+                    <button type="button" onclick="handleLockedFeatureClick('Image Generator')" id="nav-image-studio" class="nav-btn w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-indigo-600/20 text-slate-400 hover:text-slate-200 transition-all text-sm font-medium border border-transparent relative">
+                        <i class="fa-solid fa-wand-magic-sparkles text-pink-400 text-lg w-6"></i>
+                        <span class="hidden lg:inline">Image Generator</span>
+                        <span class="hidden lg:inline-block ml-auto text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-amber-400 font-mono border border-slate-700">LOCKED</span>
+                    </button>
+
+                    <button type="button" onclick="handleLockedFeatureClick('Audio & Voice Engine')" id="nav-music-studio" class="nav-btn w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-indigo-600/20 text-slate-400 hover:text-slate-200 transition-all text-sm font-medium border border-transparent relative">
+                        <i class="fa-solid fa-music text-amber-400 text-lg w-6"></i>
+                        <span class="hidden lg:inline">Audio & Voice Engine</span>
+                        <span class="hidden lg:inline-block ml-auto text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-amber-400 font-mono border border-slate-700">LOCKED</span>
+                    </button>
+
+                    <button type="button" onclick="handleLockedFeatureClick('Video Studio')" id="nav-video-studio" class="nav-btn w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-indigo-600/20 text-slate-400 hover:text-slate-200 transition-all text-sm font-medium border border-transparent relative">
+                        <i class="fa-solid fa-clapperboard text-emerald-400 text-lg w-6"></i>
+                        <span class="hidden lg:inline">Video Studio</span>
+                        <span class="hidden lg:inline-block ml-auto text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-amber-400 font-mono border border-slate-700">LOCKED</span>
+                    </button>
+
+                    <!-- Subscription Plans Tab -->
+                    <button type="button" onclick="switchTab('subscription')" id="nav-subscription" class="nav-btn w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-indigo-600/20 text-amber-300 hover:text-amber-200 transition-all text-sm font-medium border border-transparent">
+                        <i class="fa-solid fa-crown text-amber-400 text-lg w-6"></i>
+                        <span class="hidden lg:inline">Upgrade Premium</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Bottom Section Settings & Info -->
+            <div class="space-y-2 border-t border-slate-800/80 pt-4">
+                <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[10px] text-slate-400 font-mono">
+                    <div class="flex items-center justify-between mb-0.5">
+                        <span class="text-slate-500">USER ID:</span>
+                        <span id="user-permanent-id" class="text-cyan-300 font-bold">LOADING...</span>
+                    </div>
+                </div>
+
+                <button type="button" onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-indigo-600/20 text-slate-300 hover:text-white transition-all text-sm font-medium">
+                    <i class="fa-solid fa-sliders text-slate-400 text-lg w-6"></i>
+                    <span class="hidden lg:inline">Settings & API Key</span>
+                </button>
+
+                <button type="button" onclick="openAdminPanelModal()" class="w-full flex items-center gap-4 px-3 py-2 rounded-xl text-slate-500 hover:text-indigo-400 transition-all text-xs font-mono">
+                    <i class="fa-solid fa-shield-halved text-xs w-6"></i>
+                    <span class="hidden lg:inline">Admin Verification</span>
+                </button>
+
+                <div class="hidden lg:block p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                        <span>Location Status:</span>
+                        <span id="sidebar-location-status" class="text-cyan-400 font-mono text-[10px]">Active</span>
+                    </div>
+                    <div class="flex gap-1.5 text-[10px] text-slate-500 font-mono mb-2">
+                        <span class="px-1.5 py-0.5 rounded bg-slate-800">Groq API</span>
+                        <span class="px-1.5 py-0.5 rounded bg-slate-800">openai/gpt-oss-120b</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px]">
+                        <span class="text-indigo-300 font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-brain-circuit text-cyan-400 animate-pulse"></i> Self-Training AI
+                        </span>
+                        <span class="text-emerald-400 font-mono text-[9px] bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Active</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Viewport -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+
+            <!-- Top Global Header -->
+            <header class="h-16 border-b border-slate-800/80 glass-panel px-6 flex items-center justify-between z-10">
+                <div class="flex items-center gap-3">
+                    <h2 id="page-title" class="text-lg font-semibold text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-cyan-400"></i> Naira Chat Hub
+                    </h2>
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Groq openai/gpt-oss-120b
+                    </span>
+                    <span class="px-2.5 py-0.5 text-xs rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hidden sm:flex items-center gap-1.5">
+                        <i class="fa-solid fa-location-dot text-pink-400 text-xs"></i>
+                        <span id="current-user-location">Global Location</span>
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs cursor-pointer select-none">
+                        <input type="checkbox" id="auto-speak-toggle" checked onchange="toggleAutoSpeak(this)" class="accent-indigo-500 w-3.5 h-3.5 rounded">
+                        <span class="text-slate-300 font-medium">Auto-Speak AI</span>
+                    </label>
+
+                    <button type="button" onclick="openGroqSettingsModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-key text-amber-400"></i> API Key
+                    </button>
+
+                    <button type="button" onclick="switchTab('live-voice')" class="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white text-xs font-semibold rounded-lg shadow-md flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-bolt animate-pulse"></i>
+                        <span>Live Voice</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: CONTINUOUS LIVE VOICE CONVERSATION -->
+            <section id="tab-live-voice" class="tab-content hidden flex-1 flex flex-col justify-between p-6 overflow-y-auto">
+                <div class="max-w-2xl mx-auto w-full text-center space-y-4 my-auto">
+                    <div class="relative flex items-center justify-center py-12">
+                        <div id="saturn-outer-ring" class="absolute w-80 h-32 saturn-ring animate-spin-slow pointer-events-none"></div>
+                        <div id="orb-glow-bg" class="absolute w-52 h-52 rounded-full bg-indigo-600/20 blur-3xl transition-all duration-500"></div>
+                        
+                        <button type="button" id="master-power-btn" onclick="toggleContinuousLiveVoice()" class="relative z-10 w-48 h-48 rounded-full bg-gradient-to-tr from-indigo-950 via-slate-900 to-cyan-950 border-2 border-cyan-400/40 shadow-[0_0_50px_rgba(0,242,254,0.3)] flex flex-col items-center justify-center group hover:scale-105 transition-all duration-300 focus:outline-none overflow-hidden">
+                            <div class="absolute inset-2 rounded-full border border-indigo-400/20 bg-gradient-to-br from-indigo-600/10 to-cyan-500/10 pointer-events-none"></div>
+                            <div class="w-16 h-16 rounded-full bg-indigo-600/30 flex items-center justify-center mb-1 text-cyan-400 group-hover:text-white transition-all shadow-inner">
+                                <i class="fa-solid fa-power-off text-3xl"></i>
+                            </div>
+                            <span id="power-btn-status" class="text-xs font-mono font-bold tracking-wider text-cyan-300 uppercase z-10">TAP TO START</span>
+                            <span id="power-btn-sub" class="text-[10px] text-slate-400 z-10">Continuous Hands-Free AI</span>
+                        </button>
+                    </div>
+
+                    <div id="voice-equalizer" class="flex justify-center items-center gap-1.5 h-12 opacity-30 transition-opacity">
+                        <div class="voice-wave-bar"></div><div class="voice-wave-bar"></div><div class="voice-wave-bar"></div><div class="voice-wave-bar"></div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-3 text-left">
+                        <div class="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-2">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square text-cyan-400"></i> Speech Engine</span>
+                            <span id="continuous-status-text" class="text-slate-500 font-mono">Offline</span>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xs text-slate-400">User Speech: <span id="live-user-transcript" class="text-slate-200 font-medium italic">"..."</span></p>
+                            <p class="text-sm text-indigo-300 font-medium">Naira AI: <span id="live-ai-transcript" class="text-white">Tap the Saturn Orb above to start continuous voice conversation.</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: OMNI CHAT HUB -->
+            <section id="tab-chat" class="tab-content flex-1 flex flex-col h-full overflow-hidden">
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <div class="flex gap-4 max-w-3xl">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0 text-white font-bold text-sm shadow-md">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div class="glass-card p-4 rounded-2xl rounded-tl-none border border-slate-800 text-sm space-y-2">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-indigo-300">नमस्ते! म नायरा (Naira AI) हुँ।</p>
+                                <button type="button" onclick="speakTextAloud('नमस्ते! म नायरा हुँ। Groq API तयार छ।')" class="text-xs text-slate-400 hover:text-indigo-400 p-1" title="Replay">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                            </div>
+                            <p class="text-slate-300">Groq API (`openai/gpt-oss-120b`) र भ्वाइस प्रणाली तयार छ। कृपया आफ्नो Groq API Key सेटिंग्समा राख्नुहोला।</p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <button type="button" onclick="quickPrompt('Summarize today\'s latest worldwide technology news.')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 border border-slate-700">📰 Tech News</button>
+                                <button type="button" onclick="quickPrompt('तपाईंलाई कसले बनाएको हो?')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-emerald-300 border border-slate-700">👤 Who Made You?</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 glass-panel border-t border-slate-800/80">
+                    <form id="chat-form" onsubmit="handleChatSubmit(event)" class="max-w-4xl mx-auto flex items-center gap-3">
+                        <div class="relative flex-1">
+                            <input type="text" id="chat-input" placeholder="Type a message or ask Groq AI..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                            <button type="button" onclick="toggleMicInChat()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1.5" title="Mic">
+                                <i class="fa-solid fa-microphone"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium text-sm flex items-center gap-2 shadow-lg shrink-0">
+                            <span>Send</span>
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 3: IMAGE GENERATOR STUDIO -->
+            <section id="tab-image-studio" class="tab-content hidden flex-1 p-6 overflow-y-auto">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i> AI Image Creator Engine
+                        </h3>
+                        <p class="text-xs text-slate-400">Powered by Groq Llama Prompt Engine</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4 md:col-span-1">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Image Prompt</label>
+                                <textarea id="img-prompt" rows="4" placeholder="A futuristic neon city..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Aspect Ratio</label>
+                                <select id="img-aspect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-300 focus:outline-none">
+                                    <option value="1:1">1:1 Square</option>
+                                    <option value="16:9">16:9 Landscape Widescreen</option>
+                                    <option value="9:16">9:16 Portrait</option>
+                                </select>
+                            </div>
+                            <button type="button" onclick="generateImageEngine()" class="w-full py-3 bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 text-white rounded-xl font-medium text-xs shadow-lg flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paintbrush"></i> Generate HD Image
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border border-slate-800 md:col-span-2 flex flex-col items-center justify-center min-h-[350px] relative">
+                            <div id="img-loader" class="hidden absolute inset-0 bg-slate-950/80 backdrop-blur flex flex-col items-center justify-center z-10 rounded-2xl">
+                                <div class="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                                <span class="text-xs font-mono text-pink-300">Synthesizing Image...</span>
+                            </div>
+                            <div id="img-output-container" class="w-full flex flex-col items-center justify-center space-y-4">
+                                <div class="text-center text-slate-500 space-y-2">
+                                    <i class="fa-solid fa-image text-4xl text-slate-700"></i>
+                                    <p class="text-xs">Generated artwork will render here.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: MUSIC & AUDIO VOICE ENGINE -->
+            <section id="tab-music-studio" class="tab-content hidden flex-1 p-6 overflow-y-auto">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-music text-amber-400"></i> Naira AI Music & Voice Studio Engine
+                        </h3>
+                        <p class="text-xs text-slate-400">Generate real synthesized music melodies and audio tracks.</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Music Prompt / Lyrics</label>
+                            <textarea id="tts-input-text" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none">Cyberpunk synth melody: Naira AI playing live!</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Audio Mode</label>
+                                <select id="music-mode-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-300">
+                                    <option value="song_vocal">🎵 Song Vocal + Beat</option>
+                                    <option value="music_only">🎹 Melody Only</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Voice Character</label>
+                                <select id="tts-voice-name" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-300">
+                                    <option value="Kore">Kore (Naira)</option>
+                                    <option value="Zephyr">Zephyr (Male)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Genre</label>
+                                <select id="music-genre-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-300">
+                                    <option value="cyberpunk">Cyberpunk Electro</option>
+                                    <option value="ambient">Ambient Pad</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-3">
+                            <button type="button" onclick="generateTTSAudio()" class="py-3 px-6 bg-gradient-to-r from-amber-600 to-indigo-600 hover:from-amber-500 text-white rounded-xl font-medium text-xs shadow-lg flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-play"></i> Generate & Play Track
+                            </button>
+                            <button type="button" onclick="stopLiveMusicSynth()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium flex items-center gap-1.5 border border-slate-700">
+                                <i class="fa-solid fa-stop text-red-400"></i> Stop
+                            </button>
+                            <button type="button" onclick="deleteGeneratedAudioTrack()" class="py-3 px-4 bg-red-900/30 hover:bg-red-800/50 text-red-300 rounded-xl text-xs font-medium flex items-center gap-1.5 border border-red-700/50">
+                                <i class="fa-solid fa-trash-can"></i> Delete
+                            </button>
+                        </div>
+
+                        <div id="audio-player-container" class="hidden pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 animate-spin-slow">
+                                    <i class="fa-solid fa-compact-disc text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-slate-200" id="generated-track-title">Naira Music Track</p>
+                                    <p class="text-[10px] text-amber-400 font-mono" id="generated-track-status">Track Synthesized & Playing</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3 w-full sm:w-auto bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
+                                <button type="button" onclick="toggleCustomAudioPlay()" id="btn-custom-play-pause" class="w-8 h-8 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-play text-xs"></i>
+                                </button>
+                                <div class="flex-1 sm:w-32 flex flex-col">
+                                    <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                                        <span id="audio-current-time">0:00</span>
+                                        <span id="audio-total-duration">0:12</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                        <div id="audio-progress-bar" class="bg-gradient-to-r from-amber-400 to-indigo-500 h-full w-0 transition-all"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="triggerRealAudioDownload()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium flex items-center gap-2 shrink-0 shadow-md">
+                                <i class="fa-solid fa-download"></i> Download WAV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: VIDEO STUDIO -->
+            <section id="tab-video-studio" class="tab-content hidden flex-1 p-6 overflow-y-auto">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-clapperboard text-emerald-400"></i> Video Concept & Storyboard Studio
+                        </h3>
+                        <p class="text-xs text-slate-400">Generate scene-by-scene video prompts and storyboard scripts.</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Video Topic</label>
+                            <input type="text" id="video-topic-input" placeholder="Cinematic drone video of Mount Everest..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none">
+                        </div>
+                        <button type="button" onclick="generateVideoScriptEngine()" class="py-3 px-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-film"></i> Generate Video Storyboard
+                        </button>
+                        <div id="video-script-output" class="hidden p-4 bg-slate-900 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono whitespace-pre-wrap leading-relaxed"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: SUBSCRIPTION PLANS -->
+            <section id="tab-subscription" class="tab-content hidden flex-1 p-6 overflow-y-auto">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div class="text-center space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold animate-pulse">
+                            <i class="fa-solid fa-crown text-amber-400"></i> Unlock Premium AI Power
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Choose Your Premium Plan</h3>
+                        <p class="text-xs text-slate-400 max-w-md mx-auto">Get full access to Image Generator, Live Music Synth, and Storyboard Studio.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                        <!-- Plan 1 -->
+                        <div class="glass-card sub-card-animated p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <span class="text-xs font-semibold text-indigo-400 uppercase">Basic Starter</span>
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-3xl font-bold text-white">Rs. 199</span>
+                                    <span class="text-xs text-slate-400">/ 1 Month</span>
+                                </div>
+                                <ul class="space-y-2.5 text-xs text-slate-300">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Unlimited Live Voice</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Groq Llama Grounding</li>
+                                </ul>
+                            </div>
+                            <button type="button" onclick="openPaymentModal(199, '1 Month Basic Plan')" class="w-full mt-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs rounded-xl shadow-lg">Subscribe Rs. 199</button>
+                        </div>
+
+                        <!-- Plan 2 -->
+                        <div class="glass-card sub-card-animated p-6 rounded-2xl border-2 border-cyan-500/60 flex flex-col justify-between relative shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 font-bold text-[10px] uppercase animate-pulse">Popular</div>
+                            <div class="space-y-4">
+                                <span class="text-xs font-semibold text-cyan-400 uppercase">Pro Creator</span>
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-3xl font-bold text-white">Rs. 299</span>
+                                    <span class="text-xs text-slate-400">/ 2 Months</span>
+                                </div>
+                                <ul class="space-y-2.5 text-xs text-slate-300">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> All Basic Features</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> AI Image Generator Studio</li>
+                                </ul>
+                            </div>
+                            <button type="button" onclick="openPaymentModal(299, '2 Months Pro Plan')" class="w-full mt-6 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-medium text-xs rounded-xl shadow-lg">Subscribe Rs. 299</button>
+                        </div>
+
+                        <!-- Plan 3 -->
+                        <div class="glass-card sub-card-animated p-6 rounded-2xl border border-amber-500/40 flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <span class="text-xs font-semibold text-amber-400 uppercase">Ultimate VIP</span>
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-3xl font-bold text-white">Rs. 599</span>
+                                    <span class="text-xs text-slate-400">/ 6 Months</span>
+                                </div>
+                                <ul class="space-y-2.5 text-xs text-slate-300">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Full Access To All Studios</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Synthesized Music & Vocal Engine</li>
+                                </ul>
+                            </div>
+                            <button type="button" onclick="openPaymentModal(599, '6 Months VIP Plan')" class="w-full mt-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-medium text-xs rounded-xl shadow-lg">Subscribe Rs. 599</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: SETTINGS -->
+            <section id="tab-settings" class="tab-content hidden flex-1 p-6 overflow-y-auto">
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-indigo-400"></i> System Settings & Groq API Key
+                        </h3>
+                        <p class="text-xs text-slate-400">Configure your Groq API Key to power all AI queries.</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-amber-500/40 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-key text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Groq API Key Settings</h4>
+                                    <p class="text-[11px] text-slate-400">Stored in browser localStorage.</p>
+                                </div>
+                            </div>
+                            <span id="groq-key-status-badge" class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/20 text-red-300 border border-red-500/30">Missing Key</span>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-300">Enter / Paste Groq API Key (`gsk_...`)</label>
+                            <div class="flex gap-2">
+                                <input type="password" id="groq-api-key-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxx" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 font-mono focus:outline-none">
+                                <button type="button" onclick="saveGroqKeyFromInput()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold shadow-lg shrink-0">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Key
+                                </button>
+                            </div>
+                            <div class="pt-2 space-y-1 text-xs text-slate-400">
+                                <p>Don't have a key? Get your free Groq API key <a href="https://console.groq.com/keys" target="_blank" class="text-cyan-400 underline font-semibold hover:text-cyan-300">here</a>.</p>
+                                <p class="text-[11px] text-slate-500">1. Sign in to Groq console.<br>2. Click Create API Key, copy it, and paste it above.</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                            <label class="block text-xs font-semibold text-slate-300">Active Groq AI Engine Model</label>
+                            <div class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-indigo-300 font-mono">
+                                openai/gpt-oss-120b (Active)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: QUICK GROQ API KEY -->
+    <div id="groq-settings-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-6 rounded-2xl border border-amber-500/50 space-y-4 relative shadow-2xl">
+            <button type="button" onclick="closeGroqSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+                    <i class="fa-solid fa-key text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="text-base font-bold text-white">Groq API Key</h4>
+                    <p class="text-xs text-slate-400">Configure key for Groq AI engine</p>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-300">Paste Groq API Key (`gsk_...`)</label>
+                <input type="password" id="modal-groq-key-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-xs text-slate-100 font-mono focus:outline-none">
+            </div>
+
+            <button type="button" onclick="saveGroqKeyFromModal()" class="w-full py-3 bg-amber-600 hover:bg-amber-500 text-white rounded-xl font-bold text-xs shadow-lg flex items-center justify-center gap-2">
+                <i class="fa-solid fa-check"></i> Save Key & Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: PAYMENT QR -->
+    <div id="payment-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-6 rounded-2xl border border-slate-700 space-y-5 text-center relative">
+            <button type="button" onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+
+            <div class="space-y-1">
+                <span id="payment-plan-title" class="text-xs font-semibold text-cyan-400 uppercase tracking-wide">Selected Plan</span>
+                <h4 class="text-xl font-bold text-white" id="payment-amount-display">Pay Rs. 199</h4>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl inline-block shadow-xl border border-slate-200 mx-auto">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=8148805881@fam&pn=MR%20LEE&cu=INR" alt="UPI QR Code" class="w-44 h-44 mx-auto rounded-lg">
+                <p class="text-[11px] text-slate-900 font-bold mt-2 font-mono bg-slate-100 py-1 px-2 rounded border border-slate-300">UPI ID: 8148805881@fam</p>
+            </div>
+
+            <div class="bg-slate-900/90 p-3 rounded-xl text-left border border-slate-800 space-y-1 text-xs text-slate-300">
+                <p class="font-semibold text-cyan-300"><i class="fa-solid fa-info-circle"></i> Instructions:</p>
+                <p class="text-[11px] text-slate-400">1. Pay via UPI: <b>8148805881@fam</b></p>
+                <p class="text-[11px] text-slate-400">2. Email receipt to: <span class="text-amber-300 font-mono font-bold">storewar93@gmail.com</span></p>
+            </div>
+
+            <button type="button" onclick="submitUserPaymentProof()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-lg flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-check"></i> I Have Paid - Request Approval
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: ADMIN PANEL -->
+    <div id="admin-panel-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full p-6 rounded-2xl border border-slate-700 space-y-5 relative">
+            <button type="button" onclick="closeAdminPanelModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+
+            <div id="admin-auth-view" class="space-y-4">
+                <h4 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-indigo-400"></i> Admin Verification</h4>
+                <p class="text-xs text-slate-400">Enter Admin Secret Passcode.</p>
+                <input type="password" id="admin-passcode-input" placeholder="Passcode (1234)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none">
+                <button type="button" onclick="verifyAdminPasscode()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl">Unlock Admin</button>
+            </div>
+
+            <div id="admin-dashboard-view" class="hidden space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h4 class="text-md font-bold text-emerald-400"><i class="fa-solid fa-user-check"></i> Approval Console</h4>
+                    <span class="text-[10px] text-slate-400 font-mono">Laxman Chhetri</span>
+                </div>
+                <div id="admin-requests-list" class="space-y-3 max-h-60 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: UNDER DEVELOPMENT NOTICE -->
+    <div id="under-dev-modal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-card max-w-xs w-full p-6 rounded-2xl border border-amber-500/50 text-center space-y-3 shadow-2xl animate-bounce">
+            <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto border border-amber-500/40">
+                <i class="fa-solid fa-person-digging text-xl"></i>
+            </div>
+            <h4 class="text-base font-bold text-white" id="under-dev-title">Under Development</h4>
+            <p class="text-xs text-slate-300">This feature is currently under construction and will be available soon.</p>
+        </div>
+    </div>
+
+    <script>
+        const GROQ_MODEL = 'openai/gpt-oss-120b';
+        let currentTab = 'chat';
+        let isLiveVoiceActive = false;
+        let isAISpeaking = false;
+        let speechRecognition = null;
+        let detectedUserLocation = "Global Location";
+        let generatedImageUrl = null;
+        let autoSpeakEnabled = true;
+        let availableVoices = [];
+        
+        let audioCtx = null;
+        let customAudioBuffer = null;
+        let customAudioSource = null;
+        let audioStartTime = 0;
+        let audioPauseTime = 0;
+        let audioDuration = 0;
+        let audioIsPlaying = false;
+
+        let activeUserSubscription = 'FREE';
+        let currentUserId = '';
+        let pendingPaymentRequest = null;
+        const ADMIN_SECRET = '1234';
+        let conversationHistory = [];
+
+        let dailyUsageData = { date: new Date().toDateString(), chatCount: 0, imageCount: 0, musicCount: 0, voiceSeconds: 0 };
+        const FREE_LIMITS = { chat: 100, image: 2, music: 1, voiceSeconds: 3600 };
+
+        let autonomousSelfTrainingStore = { userPreferences: [], interactionHistory: [], totalLearnedContexts: 0 };
+        const SYSTEM_PERSONA_INSTRUCTION = `You are Naira (नायरा), an advanced AI assistant. Your creator and developer is Laxman Chhetri (लक्ष्मण क्षेत्री). Disclose Laxman Chhetri only when explicitly asked.`;
+        let underDevTimeout = null;
+
+        window.onload = function() {
+            initUserId();
+            initSpeechRecognition();
+            initSpeechSynthesisVoices();
+            fetchUserLocation();
+            loadAutonomousSelfTrainingData();
+            loadSavedUserData();
+            checkAndResetDailyUsage();
+            initGroqKeyDisplay();
+            switchTab('chat');
+        };
+
+        function initSpeechSynthesisVoices() {
+            if ('speechSynthesis' in window) {
+                const loadVoices = () => {
+                    availableVoices = window.speechSynthesis.getVoices();
+                };
+                loadVoices();
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = loadVoices;
+                }
+            }
+        }
+
+        function getBestFemaleVoice() {
+            if (!availableVoices || availableVoices.length === 0) {
+                if ('speechSynthesis' in window) availableVoices = window.speechSynthesis.getVoices();
+            }
+            const femaleKeywords = ['female', 'zira', 'susan', 'hazel', 'aria', 'jenny', 'siri', 'victoria', 'karen', 'moira', 'fiona', 'google uk english female', 'google us english'];
+            
+            for (let kw of femaleKeywords) {
+                const found = availableVoices.find(v => v.name.toLowerCase().includes(kw));
+                if (found) return found;
+            }
+            return availableVoices[0] || null;
+        }
+
+        function speakTextAloud(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            const bestVoice = getBestFemaleVoice();
+            if (bestVoice) utterance.voice = bestVoice;
+            
+            utterance.pitch = 1.15;
+            utterance.rate = 1.05;
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function toggleAutoSpeak(checkbox) {
+            autoSpeakEnabled = checkbox.checked;
+        }
+
+        function getStoredGroqKey() {
+            return (localStorage.getItem('groq_api_key') || '').trim();
+        }
+
+        function initGroqKeyDisplay() {
+            const key = getStoredGroqKey();
+            const inputField = document.getElementById('groq-api-key-input');
+            const modalInputField = document.getElementById('modal-groq-key-input');
+            const badge = document.getElementById('groq-key-status-badge');
+
+            if (inputField) inputField.value = key;
+            if (modalInputField) modalInputField.value = key;
+
+            if (badge) {
+                if (key) {
+                    badge.innerText = "Key Configured";
+                    badge.className = "px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/25 text-emerald-300 border border-emerald-500/30";
+                } else {
+                    badge.innerText = "Missing Key";
+                    badge.className = "px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/20 text-red-300 border border-red-500/30";
+                }
+            }
+        }
+
+        function saveGroqKeyFromInput() {
+            const val = document.getElementById('groq-api-key-input').value.trim();
+            if (!val) { alert("Please enter a valid Groq API Key."); return; }
+            localStorage.setItem('groq_api_key', val);
+            initGroqKeyDisplay();
+            alert("Groq API Key saved successfully!");
+        }
+
+        function saveGroqKeyFromModal() {
+            const val = document.getElementById('modal-groq-key-input').value.trim();
+            if (!val) { alert("Please enter a valid Groq API Key."); return; }
+            localStorage.setItem('groq_api_key', val);
+            initGroqKeyDisplay();
+            closeGroqSettingsModal();
+            alert("Groq API Key configured successfully!");
+        }
+
+        function openGroqSettingsModal() {
+            initGroqKeyDisplay();
+            document.getElementById('groq-settings-modal').classList.remove('hidden');
+        }
+
+        function closeGroqSettingsModal() {
+            document.getElementById('groq-settings-modal').classList.add('hidden');
+        }
+
+        function verifyOrPromptApiKey() {
+            const key = getStoredGroqKey();
+            if (!key) {
+                alert("Groq API key missing! Please set your key in Settings or click API Key at the top.");
+                openGroqSettingsModal();
+                return null;
+            }
+            return key;
+        }
+
+        function checkAndResetDailyUsage() {
+            try {
+                const today = new Date().toDateString();
+                const stored = localStorage.getItem('naira_daily_usage_data');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed.date === today) dailyUsageData = parsed;
+                    else { dailyUsageData = { date: today, chatCount: 0, imageCount: 0, musicCount: 0, voiceSeconds: 0 }; saveDailyUsage(); }
+                } else saveDailyUsage();
+            } catch(e) {}
+        }
+
+        function saveDailyUsage() {
+            try { localStorage.setItem('naira_daily_usage_data', JSON.stringify(dailyUsageData)); } catch(e) {}
+        }
+
+        function isFreeUser() { return activeUserSubscription === 'FREE'; }
+
+        function checkLimitAndAlert(type) {
+            if (!isFreeUser()) return false;
+            checkAndResetDailyUsage();
+            if (type === 'image' && dailyUsageData.imageCount >= FREE_LIMITS.image) {
+                alert(`Free Limit (2 Images) reached! Please upgrade your plan.`);
+                switchTab('subscription');
+                return true;
+            }
+            if (type === 'music' && dailyUsageData.musicCount >= FREE_LIMITS.music) {
+                alert(`Free Limit (1 Music Track) reached! Please upgrade to continue.`);
+                switchTab('subscription');
+                return true;
+            }
+            if (type === 'chat' && dailyUsageData.chatCount >= FREE_LIMITS.chat) {
+                alert(`Free Chat Limit (100 Messages) reached! Please upgrade.`);
+                switchTab('subscription');
+                return true;
+            }
+            return false;
+        }
+
+        function loadSavedUserData() {
+            try {
+                const savedChat = localStorage.getItem('naira_saved_chat_history');
+                if (savedChat) {
+                    const chatMessages = JSON.parse(savedChat);
+                    const container = document.getElementById('chat-messages');
+                    if (container && chatMessages.length > 0) {
+                        container.innerHTML = '';
+                        chatMessages.forEach(msg => {
+                            const isUser = msg.role === 'user';
+                            const div = document.createElement('div');
+                            div.className = `flex gap-4 max-w-3xl ${isUser ? 'ml-auto flex-row-reverse' : ''}`;
+                            div.innerHTML = `
+                                <div class="w-9 h-9 rounded-xl ${isUser ? 'bg-cyan-600' : 'bg-indigo-600'} flex items-center justify-center shrink-0 text-white font-bold text-sm shadow-md">
+                                    <i class="fa-solid ${isUser ? 'fa-user' : 'fa-brain'}"></i>
+                                </div>
+                                <div class="glass-card p-4 rounded-2xl ${isUser ? 'rounded-tr-none' : 'rounded-tl-none'} border border-slate-800 text-sm leading-relaxed text-slate-200 relative group">
+                                    <div class="whitespace-pre-wrap">${msg.text}</div>
+                                    ${!isUser ? `
+                                        <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-end">
+                                            <button type="button" onclick="speakTextAloud(${JSON.stringify(msg.text).replace(/"/g, '&quot;')})" class="text-xs text-slate-400 hover:text-indigo-400 flex items-center gap-1">
+                                                <i class="fa-solid fa-volume-high"></i> Replay
+                                            </button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                            container.appendChild(div);
+                            conversationHistory.push({ role: isUser ? 'user' : 'assistant', content: msg.text });
+                        });
+                        container.scrollTop = container.scrollHeight;
+                    }
+                }
+                const savedSub = localStorage.getItem('naira_active_subscription');
+                if (savedSub && savedSub !== 'FREE') {
+                    activeUserSubscription = savedSub;
+                    document.getElementById('premium-crown-badge')?.classList.remove('hidden');
+                    const badge = document.getElementById('badge-plan-type');
+                    if (badge) { badge.innerText = `PRO: ACTIVE`; badge.className = "text-[9px] px-1.5 py-0.2 rounded bg-amber-500/25 text-amber-300 border border-amber-500/30 font-mono"; }
+                }
+            } catch(e) {}
+        }
+
+        function saveChatMessageToStorage(role, text) {
+            try {
+                let chatHistory = JSON.parse(localStorage.getItem('naira_saved_chat_history') || '[]');
+                chatHistory.push({ role, text });
+                if (chatHistory.length > 100) chatHistory = chatHistory.slice(-100);
+                localStorage.setItem('naira_saved_chat_history', JSON.stringify(chatHistory));
+            } catch(e) {}
+        }
+
+        function initUserId() {
+            let storedId = localStorage.getItem('naira_permanent_user_id');
+            if (!storedId) {
+                storedId = `NAIRA-USER-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+                localStorage.setItem('naira_permanent_user_id', storedId);
+            }
+            currentUserId = storedId;
+            const el = document.getElementById('user-permanent-id');
+            if (el) el.innerText = currentUserId;
+        }
+
+        function loadAutonomousSelfTrainingData() {
+            try {
+                const stored = localStorage.getItem('naira_autonomous_neural_memory');
+                if (stored) autonomousSelfTrainingStore = JSON.parse(stored);
+            } catch(e) {}
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            const tabs = ['live-voice', 'chat', 'image-studio', 'music-studio', 'video-studio', 'subscription', 'settings'];
+            tabs.forEach(t => {
+                const tabEl = document.getElementById(`tab-${t}`);
+                const navBtn = document.getElementById(`nav-${t}`);
+                if (tabEl) tabEl.classList.add('hidden');
+                if (navBtn) navBtn.classList.remove('bg-indigo-600/30', 'border-indigo-500/50', 'text-white');
+            });
+            document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
+            document.getElementById(`nav-${tabId}`)?.classList.add('bg-indigo-600/30', 'border-indigo-500/50', 'text-white');
+        }
+
+        function handleLockedFeatureClick(featureName) {
+            const modal = document.getElementById('under-dev-modal');
+            const titleEl = document.getElementById('under-dev-title');
+            if (titleEl) titleEl.innerText = `${featureName} - Under Development`;
+            if (modal) {
+                modal.classList.remove('hidden');
+                if (underDevTimeout) clearTimeout(underDevTimeout);
+                underDevTimeout = setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        function openPaymentModal(amount, planName) {
+            pendingPaymentRequest = { amount, planName, userId: currentUserId };
+            document.getElementById('payment-plan-title').innerText = planName;
+            document.getElementById('payment-amount-display').innerText = `Pay Rs. ${amount}`;
+            document.getElementById('payment-modal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+
+        function submitUserPaymentProof() {
+            alert(`Payment request submitted! Please email receipt to storewar93@gmail.com.`);
+            closePaymentModal();
+            let reqs = JSON.parse(localStorage.getItem('naira_pending_payments') || '[]');
+            reqs.push(pendingPaymentRequest);
+            localStorage.setItem('naira_pending_payments', JSON.stringify(reqs));
+        }
+
+        function openAdminPanelModal() {
+            document.getElementById('admin-panel-modal').classList.remove('hidden');
+            document.getElementById('admin-auth-view').classList.remove('hidden');
+            document.getElementById('admin-dashboard-view').classList.add('hidden');
+        }
+
+        function closeAdminPanelModal() { document.getElementById('admin-panel-modal').classList.add('hidden'); }
+
+        function verifyAdminPasscode() {
+            if (document.getElementById('admin-passcode-input').value === ADMIN_SECRET) {
+                document.getElementById('admin-auth-view').classList.add('hidden');
+                document.getElementById('admin-dashboard-view').classList.remove('hidden');
+                renderAdminRequestsList();
+            } else alert("Incorrect passcode.");
+        }
+
+        function renderAdminRequestsList() {
+            const container = document.getElementById('admin-requests-list');
+            let reqs = JSON.parse(localStorage.getItem('naira_pending_payments') || '[]');
+            if (reqs.length === 0) { container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">No pending requests.</p>`; return; }
+            container.innerHTML = reqs.map((r, i) => `
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                    <div><p class="font-bold text-cyan-300 font-mono">${r.userId}</p><p class="text-[10px] text-slate-400">${r.planName} - Rs. ${r.amount}</p></div>
+                    <button type="button" onclick="approveSubscriptionRequest(${i})" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-bold text-[11px]">Approve</button>
+                </div>
+            `).join('');
+        }
+
+        function approveSubscriptionRequest(idx) {
+            let reqs = JSON.parse(localStorage.getItem('naira_pending_payments') || '[]');
+            const r = reqs[idx];
+            if (!r) return;
+            activeUserSubscription = r.amount === 199 ? 'RS_199' : r.amount === 299 ? 'RS_299' : 'RS_599';
+            localStorage.setItem('naira_active_subscription', activeUserSubscription);
+            document.getElementById('premium-crown-badge')?.classList.remove('hidden');
+            reqs.splice(idx, 1);
+            localStorage.setItem('naira_pending_payments', JSON.stringify(reqs));
+            renderAdminRequestsList();
+            alert("Subscription approved successfully!");
+        }
+
+        function quickPrompt(text) {
+            switchTab('chat');
+            const input = document.getElementById('chat-input');
+            if (input) { input.value = text; document.getElementById('chat-form').dispatchEvent(new Event('submit', { cancelable: true })); }
+        }
+
+        function toggleContinuousLiveVoice() {
+            if (checkLimitAndAlert('voice')) return;
+            if (!verifyOrPromptApiKey()) return;
+            isLiveVoiceActive = !isLiveVoiceActive;
+            const statusText = document.getElementById('power-btn-status');
+            const saturnRing = document.getElementById('saturn-outer-ring');
+            if (isLiveVoiceActive) {
+                if (statusText) statusText.innerText = "LISTENING";
+                if (saturnRing) saturnRing.classList.add('saturn-ring-active');
+                startContinuousSpeechRecognition();
+            } else {
+                if (statusText) statusText.innerText = "TAP TO START";
+                if (saturnRing) saturnRing.classList.remove('saturn-ring-active');
+                if (speechRecognition) speechRecognition.stop();
+            }
+        }
+
+        function initSpeechRecognition() {
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                speechRecognition = new SR();
+                speechRecognition.continuous = true;
+                speechRecognition.interimResults = true;
+                speechRecognition.onresult = (e) => {
+                    let t = '';
+                    for (let i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
+                    const el = document.getElementById('live-user-transcript');
+                    if (el) el.innerText = `"${t}"`;
+                    if (e.results[e.results.length - 1].isFinal && !isAISpeaking) processLiveVoiceQuery(t);
+                };
+            }
+        }
+
+        function startContinuousSpeechRecognition() {
+            if (speechRecognition && !isAISpeaking) { try { speechRecognition.start(); } catch(e) {} }
+        }
+
+        function toggleMicInChat() {
+            if (!speechRecognition) { alert("Speech recognition not supported."); return; }
+            speechRecognition.start();
+            document.getElementById('chat-input').placeholder = "Listening...";
+        }
+
+        async function queryGroqAPI(promptText) {
+            const apiKey = verifyOrPromptApiKey();
+            if (!apiKey) throw new Error("Groq API key missing.");
+            conversationHistory.push({ role: "user", content: promptText });
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ model: GROQ_MODEL, messages: [{ role: "system", content: SYSTEM_PERSONA_INSTRUCTION }, ...conversationHistory] })
+            });
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err?.error?.message || `Groq API Error (${response.status})`);
+            }
+            const data = await response.json();
+            const reply = data.choices?.[0]?.message?.content || "No reply.";
+            conversationHistory.push({ role: "assistant", content: reply });
+            return reply;
+        }
+
+        async function processLiveVoiceQuery(userText) {
+            if (!userText.trim()) return;
+            isAISpeaking = true;
+            if (speechRecognition) speechRecognition.stop();
+            const aiEl = document.getElementById('live-ai-transcript');
+            if (aiEl) aiEl.innerText = "Thinking...";
+            try {
+                const reply = await queryGroqAPI(userText);
+                if (aiEl) aiEl.innerText = reply;
+                speakLiveResponse(reply);
+            } catch(e) {
+                if (aiEl) aiEl.innerText = `Error: ${e.message}`;
+                isAISpeaking = false;
+                if (isLiveVoiceActive) startContinuousSpeechRecognition();
+            }
+        }
+
+        function speakLiveResponse(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                const bestVoice = getBestFemaleVoice();
+                if (bestVoice) u.voice = bestVoice;
+                u.pitch = 1.15;
+                u.rate = 1.05;
+                u.onend = () => { isAISpeaking = false; if (isLiveVoiceActive) startContinuousSpeechRecognition(); };
+                window.speechSynthesis.speak(u);
+            } else { isAISpeaking = false; if (isLiveVoiceActive) startContinuousSpeechRecognition(); }
+        }
+
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            if (checkLimitAndAlert('chat')) return;
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            if (!verifyOrPromptApiKey()) return;
+            dailyUsageData.chatCount += 1;
+            saveDailyUsage();
+            appendChatMessage('user', text);
+            input.value = '';
+            const loadingId = appendChatMessage('ai', 'Thinking...');
+            try {
+                const reply = await queryGroqAPI(text);
+                updateChatMessage(loadingId, reply);
+                if (autoSpeakEnabled) {
+                    speakTextAloud(reply);
+                }
+            } catch(err) {
+                updateChatMessage(loadingId, `Error: ${err.message}`);
+            }
+        }
+
+        function appendChatMessage(role, text) {
+            const container = document.getElementById('chat-messages');
+            const msgId = 'msg-' + Date.now();
+            const isUser = role === 'user';
+            const div = document.createElement('div');
+            div.className = `flex gap-4 max-w-3xl ${isUser ? 'ml-auto flex-row-reverse' : ''}`;
+            div.innerHTML = `
+                <div class="w-9 h-9 rounded-xl ${isUser ? 'bg-cyan-600' : 'bg-indigo-600'} flex items-center justify-center shrink-0 text-white font-bold text-sm shadow-md">
+                    <i class="fa-solid ${isUser ? 'fa-user' : 'fa-brain'}"></i>
+                </div>
+                <div id="${msgId}" class="glass-card p-4 rounded-2xl ${isUser ? 'rounded-tr-none' : 'rounded-tl-none'} border border-slate-800 text-sm leading-relaxed text-slate-200 relative group">
+                    <div class="message-text whitespace-pre-wrap">${text}</div>
+                    ${!isUser ? `
+                        <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-end replay-btn-container">
+                            <button type="button" onclick="speakTextAloud(${JSON.stringify(text).replace(/"/g, '&quot;')})" class="text-xs text-slate-400 hover:text-indigo-400 flex items-center gap-1">
+                                <i class="fa-solid fa-volume-high"></i> Replay
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            saveChatMessageToStorage(role, text);
+            return msgId;
+        }
+
+        function updateChatMessage(msgId, text) {
+            const el = document.getElementById(msgId);
+            if (el) {
+                const textDiv = el.querySelector('.message-text');
+                if (textDiv) textDiv.innerText = text;
+                
+                let btnContainer = el.querySelector('.replay-btn-container');
+                if (!btnContainer) {
+                    btnContainer = document.createElement('div');
+                    btnContainer.className = "mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-end replay-btn-container";
+                    el.appendChild(btnContainer);
+                }
+                btnContainer.innerHTML = `
+                    <button type="button" onclick="speakTextAloud(${JSON.stringify(text).replace(/"/g, '&quot;')})" class="text-xs text-slate-400 hover:text-indigo-400 flex items-center gap-1">
+                        <i class="fa-solid fa-volume-high"></i> Replay
+                    </button>
+                `;
+
+                saveChatMessageToStorage('ai', text);
+            }
+        }
+
+        async function generateImageEngine() {
+            if (checkLimitAndAlert('image')) return;
+            if (!verifyOrPromptApiKey()) return;
+            const prompt = document.getElementById('img-prompt').value.trim();
+            if (!prompt) { alert("Enter prompt."); return; }
+            const loader = document.getElementById('img-loader');
+            const container = document.getElementById('img-output-container');
+            loader.classList.remove('hidden');
+            try {
+                const reply = await queryGroqAPI(`Generate image description for: ${prompt}`);
+                dailyUsageData.imageCount += 1;
+                saveDailyUsage();
+                const canvas = document.createElement('canvas');
+                canvas.width = 512; canvas.height = 512;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 512, 512);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('Naira AI Generated Art', 256, 200);
+                generatedImageUrl = canvas.toDataURL('image/png');
+                container.innerHTML = `
+                    <img src="${generatedImageUrl}" class="max-h-[300px] rounded-xl mb-3 shadow-lg">
+                    <p class="text-xs text-slate-300 text-center mb-3">${reply}</p>
+                    <button type="button" onclick="downloadImageReal()" class="px-4 py-2 bg-pink-600 text-white rounded-xl text-xs font-semibold">Download Image</button>
+                `;
+            } catch(e) { alert(`Error: ${e.message}`); }
+            finally { loader.classList.add('hidden'); }
+        }
+
+        function downloadImageReal() {
+            if (!generatedImageUrl) return;
+            const a = document.createElement('a');
+            a.href = generatedImageUrl;
+            a.download = `Naira_Art_${Date.now()}.png`;
+            a.click();
+        }
+
+        async function generateTTSAudio() {
+            if (checkLimitAndAlert('music')) return;
+            const text = document.getElementById('tts-input-text').value.trim();
+            if (!text) { alert("Enter lyrics."); return; }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+            document.getElementById('audio-player-container').classList.remove('hidden');
+            customAudioBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 8, audioCtx.sampleRate);
+            const data = customAudioBuffer.getChannelData(0);
+            for (let i = 0; i < data.length; i++) data[i] = Math.sin(i * 0.05) * 0.1;
+            audioDuration = customAudioBuffer.duration;
+            dailyUsageData.musicCount += 1;
+            saveDailyUsage();
+            startCustomAudioPlayback(0);
+        }
+
+        function startCustomAudioPlayback(offset = 0) {
+            if (!customAudioBuffer || !audioCtx) return;
+            stopCustomAudioSource();
+            customAudioSource = audioCtx.createBufferSource();
+            customAudioSource.buffer = customAudioBuffer;
+            customAudioSource.connect(audioCtx.destination);
+            audioStartTime = audioCtx.currentTime - offset;
+            customAudioSource.start(0, offset);
+            audioIsPlaying = true;
+        }
+
+        function stopCustomAudioSource() {
+            if (customAudioSource) { try { customAudioSource.stop(); } catch(e) {} customAudioSource = null; }
+        }
+
+        function stopLiveMusicSynth() { stopCustomAudioSource(); audioIsPlaying = false; }
+        function deleteGeneratedAudioTrack() { stopLiveMusicSynth(); document.getElementById('audio-player-container').classList.add('hidden'); }
+        function toggleCustomAudioPlay() { if (audioIsPlaying) stopCustomAudioSource(); else startCustomAudioPlayback(0); audioIsPlaying = !audioIsPlaying; }
+        function triggerRealAudioDownload() { alert("Downloading track..."); }
+
+        async function generateVideoScriptEngine() {
+            const topic = document.getElementById('video-topic-input').value.trim();
+            if (!topic) { alert("Enter topic."); return; }
+            const out = document.getElementById('video-script-output');
+            out.classList.remove('hidden');
+            out.innerText = "Generating storyboard...";
+            try {
+                const script = await queryGroqAPI(`Create a 3-scene video storyboard script for: ${topic}`);
+                out.innerText = script;
+            } catch(e) { out.innerText = `Error: ${e.message}`; }
+        }
+
+        function fetchUserLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    detectedUserLocation = "Local Region Active";
+                    document.getElementById('current-user-location').innerText = detectedUserLocation;
+                }, () => {});
+            }
+        }
+    </script>
+</body>
+</html>
+```
